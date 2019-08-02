@@ -16,8 +16,7 @@ some of the assembled transcripts may only be partially described by our reads, 
 in order to create a set of transcripts that is consistent across all samples. StringTie also provides estimates for expression levels for
 each gene and isoform both before and after the merging process, as well as information about relative abundance. We can pass this information
 into gffcompare for useful statistics on our transcripts. StringTie can then compile coverage tables, which are descriptions of our reads or
-merged transcripts that align to or "cover" our known reference genome. Finally, these tables will be fed into Ballgown, which will take all 
-of the information on transcripts and abundances and determine which genes and transcripts are differentially expressed between two experimental groups. This data we will pass into R to perform our analysis and make visualizations.
+merged transcripts that align to or "cover" our known reference genome. Finally, these tables will be fed into Ballgown in R, which will take all of the information on transcripts and abundances and determine which genes and transcripts are differentially expressed between two experimental groups.
 
 For starters, we need to download all of the appropriate software. This project uses HISAT2, StringTie, and SAMTools - we also need to 
 install Ballgown through the R console. These were all fairly straightforward installations with clear instructions on their respective
@@ -25,7 +24,7 @@ websites and READMEs. After unpacking and running the makefiles, we then need to
 can download the data (also supplied in the article), move it to our project directory, and get started on the first step.
 
 The first objective in our pipeline is to read our RNA sequences into HISAT2 in order to generate our alignments. To reiterate, our goal
-here is map these millions of short reads of mRNA that we are given to some reference genome, where we will then attempt to pinpoint the 
+here is map these millions of short reads of mRNA that we are given to our reference genome, where we will then attempt to pinpoint the 
 position of where these short sequences belong within that genome. After navigating to our project directory, we can run the following 
 commands for each of our twelve samples to do this:
 
