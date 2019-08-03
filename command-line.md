@@ -114,7 +114,7 @@ Which prints the following useful statistics for us.
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/gffcompare-terminal-2.png">
 </p>
 
-*compare with pre-merge here*
+Sensitivity is the proportion of genes that are correctly constructed, which translates to a low false negative rate. Precision is the proportion of output that overlaps the annotation. High sensitivity and precision are crucial for our transcriptome assembler; if large quantities of our initial reads are not aligned, then the aligner will have significant difficulty reconstructing genes - particularly low abundance genes. In our case, for our merged transcriptions, the results indicate that we clearly have a low false negative rate, but the precision tells us that many of our transcripts are not within the list of StringTie's known transcripts. This means they are either false positives or *de novo* (new) transcripts.
 
 Our last step is to create coverage tables, which we will pass into Ballgown in R (described in the following section). These coverage tables consolidate the description of our merged transcripts, comparing them to our reference genome to determine how much of that genome they cover.
 
@@ -141,3 +141,5 @@ With that, we're done with the command line portion of the project and can move 
 [RNA-seqlopedia](https://rnaseq.uoregon.edu/)
 
 [Imperial College London: Read alignment](https://www.imperial.ac.uk/bioinformatics-data-science-group/resources/software/next-generation-sequencing-ngs-software/read-alignment/)
+
+[Getting started with HISAT, StringTie, and Ballgown](https://davetang.org/muse/2017/10/25/getting-started-hisat-stringtie-ballgown/)
