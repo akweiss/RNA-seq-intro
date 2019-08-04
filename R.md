@@ -150,6 +150,10 @@ Using identical commands as above (but with updated position within the bg_chrX_
 
 Talk about transcript level vs gene level; .63 is PNP's gene ID, which DOES appear on the readout for results_genes.
 
+<p align="center">
+  <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/gene_results_10.png">
+</p>
+
 Similarly, for FMR1 we have:
 
 <p align="center">
@@ -164,7 +168,11 @@ FMR1 matches more on transcript level. Does not even appear on the top 30 for ge
 
 Lastly, let's look at a gene that is known to be expressed differentially and *did* show up on our list with the q-value < 0.05 cutoff: XIST. According to our reference article for this project, XIST is known to be more highly expressed in females than males. We can verify this quickly by producing a boxplot similar to those done above.
 
-IMAGE HERE.
+<p align="center">
+  <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/XIST_diff.png">
+</p>
+
+Yeah, that's... pretty convincing.
 
 If we recall our readout for transcript_results, we can see that XIST has the ID of 2394:
 
