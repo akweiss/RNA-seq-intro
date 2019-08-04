@@ -122,7 +122,7 @@ ballgown::transcriptNames(bg_chrX_filt)[797]), pch = 19, xlab = "Sex", ylab = "l
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/ATP6AP2-diff.png">
 </p>
 
-While this might seem like a reasonable difference between males and females, note the scale of the y-axis: in actuality, it appears that the difference between means of NM_005765 is approximately 0.5. In this way, the boxplot can appear a bit deceiving - we should consider manually rescaling the y-axis to better illustrate this FPKM distribution.
+While this might seem like a reasonable difference between males and females, note the scale of the y-axis: in actuality, it appears that the difference between medians of NM_005765 is approximately 0.5. In this way, the boxplot can appear a bit deceiving - we should consider manually rescaling the y-axis to better illustrate this FPKM distribution.
 
 Going back to our transcripts_results readout above, we know the gene ID of ATP6AP2 is MSTRG.240. Thus, we can expand further by plotting the average expression levels for all transcripts of ATP6AP2 between males and females with the following:
 
