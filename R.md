@@ -208,11 +208,11 @@ main = c('Gene XIST in Sample ERR188428'), sample = c('ERR188428'))
 
 From these plots, we see that in our samples XIST has thirteen distinct isoforms. Of these, it appears that the eleventh isoform is the most highly expressed - which we can verify if we iterate through all of the female samples we have. I have included these plots in the [images](https://github.com/akweiss/RNA-seq-intro/tree/master/images) folder, for anyone interested in studying them in more detail. 
 
-# Final Thoughts
+## Final Thoughts
 
 From this project and our data, we can clearly conclude that both the NR_001564 transcript of the XIST gene and the XIST gene itself are differentially expressed between males and females. Additionally, PNPLA4 was found to be differentially expressed on the gene level, while ATP6AP2 just barely missed the cutoff in both categories. I think both of these genes have strong evidence of differential expression given our data, despite not making the cutoff of q < 0.05. It's worth noting that this cutoff is entirely arbitrary; if we had set it to q < 0.08, for instance, ATP6AP2 would be considered differentially expressed on both levels.
 
 Overall, I'm happy with my analysis because my results were slightly different from the results provided in the tutorial. It was fun to explore my own data and make my own conclusions, knowing that if I ran the same command line protocol again I would get a different outcome and subsequently different data to analyze. Most of all, I feel like this analysis forced me to learn and understand the subject on a deeper level, which is largely why I found it so enjoyable.
 
-# Resources
+## Resources
 [EBI: FPKM](https://www.ebi.ac.uk/training/online/glossary/fpkm)
