@@ -1,6 +1,6 @@
 ## Analysis in R
 
-Now that we have our Ballgown data from our command line programs, we can shift gears and move into R to do our analysis and generate some visualizations. Generally speaking, in differential gene expression analysis we are interested in performing statistical analyses in order to detect quantitative differences in expression levels between two experimental groups. In our case, we are interested in investigating the difference between the human X chromosome expression in males and females.
+Now that we have our Ballgown data from our command line programs, we can shift gears and move into R to do our analysis and generate some visualizations. Generally speaking, in differential gene expression analysis we are interested in performing statistical analyses in order to detect quantitative differences in expression levels between two experimental groups. In our case, we are interested in investigating the difference between the human X chromosome gene expression in males and females.
 
 To get started, let's import the appropriate libraries into R.
 
@@ -166,7 +166,7 @@ Similarly, for FMR1 we have:
 
 FMR1 matches more on transcript level. Does not even appear on the top 30 for gene comparison, which we can somewhat verify from the means plot.
 
-Lastly, let's look at a gene that is known to be expressed differentially and *did* show up on our list with the q-value < 0.05 cutoff: XIST. According to our reference article for this project, XIST is known to be more highly expressed in females than males. We can verify this quickly by producing a boxplot similar to those done above.
+Lastly, let's look at a gene that is known to be expressed differentially and *did* show up on our list with a q-value < 0.05 cutoff: XIST. According to our reference article for this project, XIST is known to be more highly expressed in females than males. We can verify this quickly by producing a boxplot similar to those done above.
 
 <p align="center">
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/XIST_diff.png">
