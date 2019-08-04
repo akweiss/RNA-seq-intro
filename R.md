@@ -71,7 +71,7 @@ First off, we can change our colors to help aid our visualizations:
 > palette(colorscheme)
 ```
 
-Let's start with a plot of gene abundances across samples, measured as FPKM values. FPKM is "fragments per kilobase of exon model per million reads mapped" - it is an estimation of gene expression based on our data, calculated by counting the number of reads mapped to each gene sequence. 
+Let's start with a plot of gene abundances across samples, measured as FPKM values. FPKM is "fragments per kilobase of exon model per million reads mapped" - it is an estimation of gene expression based on our data, calculated by counting the number of reads mapped to each gene sequence. We apply the transform of log2(fpkm + 1) because log(0) is undefined.
 
 ``` sh
 > fpkm = texpr(bg_chrX, meas = "fpkm")
@@ -99,7 +99,7 @@ Here we can see that our medians (the bold bars within each box for each individ
 
 Now we see our medians all vary between 0 and ~3. Interesting! After some thought, this does make sense; reads that only appear once in our data can only be mapped once - if they map at all - and log2(1) = 0. Thus, this seems to imply that our bg_chrX data has a lot of genes with very low or zero abundance in our samples, while the bg_chrX_filt data removes these to give a better feel for the proportion of genes with higher abundance.
 
-Next, let's investigate which genes missed our cutoff of q < 0.05. We can do this by looking at the first 20 rows of our results_transcript dataframe.
+Next, let's investigate which transcripts missed our cutoff of q < 0.05. We can do this by looking at the first 20 rows of our results_transcript dataframe.
 
 ```sh
 > head(results_transcripts, 20)
@@ -109,7 +109,7 @@ Next, let's investigate which genes missed our cutoff of q < 0.05. We can do thi
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/results_20.png">
 </p>
 
-From this, we can see that the gene ATP6AP2 narrowly missed our cutoff. Let's investigate this gene. From the readout, we know its ID is 1042 - after a little investigation, we can find that in our bg_chrX_filt object, ATP6AP2 is indexed at position 797. Using this, we can generate some visualizations.
+From this, we can see that the gene ATP6AP2 narrowly missed our cutoff. Let's investigate this gene. From the readout, we know its transcript ID is 1042 - after a little investigation, we can find that in our bg_chrX_filt object, ATP6AP2 is indexed at position 797. Using this, we can generate some visualizations.
 
 First off, let's use a boxplot to show FPKM distribution of the individual ATP6AP2 transcript NM_005765 across all samples.
 
@@ -122,7 +122,7 @@ ballgown::transcriptNames(bg_chrX_filt)[797]), pch = 19, xlab = "Sex", ylab = "l
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/ATP6AP2-diff.png">
 </p>
 
-While this might seem like a reasonable difference between males and females, note the scale of the y-axis: in actuality, it appears that the difference between means of NM_005765 is approximately 0.5. In this way, the boxplot can seem a bit deceiving - we should consider manually rescaling the y-axis to better illustrate this FPKM distribution.
+While this might seem like a reasonable difference between males and females, note the scale of the y-axis: in actuality, it appears that the difference between means of NM_005765 is approximately 0.5. In this way, the boxplot can appear a bit deceiving - we should consider manually rescaling the y-axis to better illustrate this FPKM distribution.
 
 Going back to our transcripts_results readout above, we know the gene ID of ATP6AP2 is MSTRG.240. Thus, we can expand further by plotting the average expression levels for all transcripts of ATP6AP2 between males and females with the following:
 
@@ -134,7 +134,7 @@ Going back to our transcripts_results readout above, we know the gene ID of ATP6
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/ATP6AP2-means.png">
 </p>
 
-From this visualization, we can see that the gene ATP6AP2 has five distinct isoforms. We can see the differential expression of ATP6AP2 in males and females with this side-by-side comparison - in this case, the fourth isoform seems to be the most highly expressed.
+From this visualization, we now know that in our data the gene ATP6AP2 has five distinct isoforms. We can see the differential expression of ATP6AP2 in males and females with this side-by-side comparison - in this case, the fourth isoform seems to be the most highly expressed.
 
 We can perform similar analyses for the genes PNPLA4 and FMR1.
 
@@ -148,7 +148,7 @@ Using identical commands as above (but with updated position within the bg_chrX_
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/PNPLA4-means.png">
 </p>
 
-The case of PNPLA4 provides a good example of the difference between transcript level and gene level differential expression. Note that PNPLA4's gene ID, MSTRP.63, *is* listed in our statistically significant gene_results table, but is *not* in the transcript_results table (though it does appear in the top 20). What does this mean? Essentially
+The case of PNPLA4 provides a good example of the difference between transcript level and gene level differential expression. Note that PNPLA4's gene ID, MSTRP.63, *is* listed in our statistically significant gene_results table, but is *not* in the transcript_results table (though it does appear in the top 20). Essentially, this means that the overall gene of PNPLA4 was found to be differentially expressed with statistical significance, but its transcripts were not (EDIT). From inspecting our boxplot of NM_001142389, this makes some sense; there is a tremendous amount of variation in females, to the extent that for this transcript nearly all of the data for the males is encompassed in the space just between the first quartile and the median for the females. This can make it difficult to conclude if there really is a significant difference. On the gene level, however, PNPLA4 appears to be more highly expressed in four out of the five distinct isoforms.
 
 It's also worth noting that the gene ID for ATP6AP2, MSTRP.240, just *barely* missed the cutoff of q < 0.05 on the gene level. In my opinion, this - paired with also narrowly missing the cutoff on the transcript level - enables an argument to be made for our data showing ATP6AP2 to be differentially expressed.
 
@@ -166,7 +166,7 @@ Continuing on and following a similar approach, for FMR1 we get:
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/FMR1-means.png">
 </p>
 
-FMR1 matches more on transcript level. If we query our table of gene_results, it does not appear in even the top 30. To some degree, we can verify this through our plots - slkdfj.
+FMR1 appears to be more statistically significant on transcript level. In fact, if we query our table of gene_results, it does not appear in even the top 30. To some degree, we can verify this through our plots - in the side-by-side comparison between males and females on the gene level, there is no clear perceptual distinction or "winner" between the two. But on the transcript level, we have two fairly compact boxplots where the median of the female approaches the maximum of the male. However, of the three genes we've examined the evidence for FMR1 is certainly the least compelling, and I don't think our data reasonably delineates FMR1 as a candidate for differential expression the same way that it does for PNPLA4 and ATP6AP2.
 
 Lastly, let's look at a gene that is known to be expressed differentially and *did* show up on our list with a q-value < 0.05 cutoff: XIST. According to our reference article for this project, XIST is known to be more highly expressed in females than males. We can verify this quickly by producing a boxplot similar to those done above.
 
@@ -206,7 +206,7 @@ main = c('Gene XIST in Sample ERR188428'), sample = c('ERR188428'))
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/XIST_ERR188428_Vis.png">
 </p>
 
-From these plots, we see that in our samples XIST has 13 distinct isoforms.
+From these plots, we see that in our samples XIST has thirteen distinct isoforms. Of these, it appears that the eleventh isoform is the most highly expressed.
 
 # Final Thoughts
 
