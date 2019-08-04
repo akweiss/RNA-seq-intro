@@ -82,7 +82,7 @@ Let's start with a plot of gene abundances across samples, measured as FPKM valu
 From this, we get the following visualization with males being represented by blue and females represented by pink:
 
 <p align="center">
-  <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/FPKM-samples.png">
+  <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/FPKM-samples-dist.png">
 </p>
 
 Here we can see that our medians (the bold bars within each box for each individual sample) are all nearly zero. Hmm. Intuitively, this seems to indicate to me that we have a LOT of low abundance genes kicking around in there. Let's try the same thing again, calculating FPKM with bg_chrX_filt this time.
@@ -94,56 +94,107 @@ Here we can see that our medians (the bold bars within each box for each individ
 ```
 
 <p align="center">
-  <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/FPKM-samples.png">
+  <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/FPKM_filt_samples.png">
 </p>
 
-Now we see our medians are all closer to ???. Interesting! Implicitly, this tells us something about our transcription assembly process: the sensitivity was very good?
+Now we see our medians all vary between 0 and ~3. Interesting! Implicitly, this tells us something about our transcription assembly process: the sensitivity was very good?
 
-Next, let's look at the gene GTPBP6. This gene did not show up in our table, even though GTPBP6 is - according to our reference article - more highly expressed in males than in females. I want to investigate what happened within our own data that caused it to miss the cutoff of a q-value < 0.05. First, let's find the position of the gene in our Ballgown object.
+Next, let's investigate which genes missed our cutoff of q < 0.05. We can do this by looking at the first 20 rows of our results_transcript dataframe.
 
-``` sh
-> thing
+```sh
+> head(results_transcripts, 20)
 ```
 
-This command prints a list of all genes within bg_chrX, along with their positions. Luckly we can find a ??? near the top, at 17. Next, let's create a boxplot to illustrate our differential expression.
+<p align="center">
+  <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/results_20.png">
+</p>
+
+From this, we can see that the gene ATP6AP2 narrowly missed our cutoff. Let's investigate this gene. From the readout, we know its ID is 1042 - after a little investigation, we can find that in our bg_chrX_filt object, ATP6AP2 is indexed at position 797. Using this, we can generate some visualizations.
+
+First off, boxplot to sdlkfjsdklfj illustrate our differential expression.
 
 ``` sh
-?
+> plot(fpkm[797,] ~ pheno_data$sex, border = c(1,2), main = paste(ballgown::geneNames(bg_chrX_filt)[797],' : ', 
+ballgown::transcriptNames(bg_chrX_filt)[797]), pch = 19, xlab = "Sex", ylab = "log2(FPKM + 1)")
 ```
 
-IMAGE HERE
+<p align="center">
+  <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/ATP6AP2-diff.png">
+</p>
 
-This does a great job of explaining why ??? missed the cutoff: from the visualization, we can see that there is a tremendous amount of variation in males (quartiles are huge), but the median value for the females has a higher FPKM value. slkdfjsdlkf s here.
+Expand
 
-We can expand on this further by plotting the average expression levels for all transcripts of ???? between males and females with the following:
+Noting that from our above transcripts readout, we know the geneID of ATP6AP2 is MSTRG.240. Thus, we can expand further by plotting the average expression levels for all transcripts of ATP6AP2 between males and females with the following:
 
 ``` sh
-> plotMeans(
+> plotMeans(MSTRG.240', bg_chrX_filt, groupvar = "sex", legend = FALSE)
 ```
 
-IMAGE HERE
+<p align="center">
+  <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/ATP6AP2-means.png">
+</p>
 
 Analysis here
 
-We can perform similar analyses for the genes PLCXD1 (females) and PNPLA4 (?).
+We can perform similar analyses for the genes PNPLA4 and FMR1.
 
-Lastly, let's look at a gene that is known to be expressed differentially and *did* show up on our list with the q-value < 0.05 cutoff: XIST. 
+Using identical commands as above (but with updated position within the bg_chrX_filt object and appropriate geneID), we get the following results for PNPLA4:
 
-Explainslkdfj code creating plot
+<p align="center">
+  <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/PNPLA4-diff.png">
+</p>
+
+<p align="center">
+  <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/PNPLA4-means.png">
+</p>
+
+Talk about transcript level vs gene level; .63 is PNP's gene ID, which DOES appear on the readout for results_genes.
+
+Similarly, for FMR1 we have:
+
+<p align="center">
+  <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/FMR1-diff.png">
+</p>
+
+<p align="center">
+  <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/FMR1-means.png">
+</p>
+
+FMR1 matches more on transcript level. Does not even appear on the top 30 for gene comparison, which we can somewhat verify from the means plot.
+
+Lastly, let's look at a gene that is known to be expressed differentially and *did* show up on our list with the q-value < 0.05 cutoff: XIST. According to our reference article for this project, XIST is known to be more highly expressed in females than males. We can verify this quickly by producing a boxplot similar to those done above.
+
+IMAGE HERE.
+
+If we recall our readout for transcript_results, we can see that XIST has the ID of 2394:
+
+<p align="center">
+  <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/RNA-seq-qval-2.png">
+</p>
+
+Thus, let's look at XIST in one of our female samples. From our .csv, we know ERR188234 is female - therefore:
 
 ``` sh
->
+> plotTranscripts(ballgown::geneIDs(bg_chrX)[2394], bg_chrX, 
+main = c('Gene XIST in Sample ERR188234'), sample = c('ERR188234'))
 ```
 
-Plot: Gene XIST in sample????
+Gives us this plot:
 
-Additionally, we can generate a similar plot of the expression of the XIST gene in our other samples:
+<p align="center">
+  <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/XIST_ERR188234_Vis.png">
+</p>
+
+Additionally, we can generate a similar plot of the expression of the XIST gene in our other samples by simply changing the "sample = c('ERR188234')" parameter (and changing the title of our plot for the purposes of clarity):
 
 ``` sh
-same code different day
+> plotTranscripts(ballgown::geneIDs(bg_chrX)[2394], bg_chrX, 
+main = c('Gene XIST in Sample ERR188428'), sample = c('ERR188428'))
 ```
 
-IMAGE
+<p align="center">
+  <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/XIST_ERR188428_Vis.png">
+</p>
 
 Analysis
 
