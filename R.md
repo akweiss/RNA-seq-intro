@@ -18,7 +18,7 @@ Next we need to read our phenotype data into R, using the .csv also provided by 
 > pheno_data = read.csv("~/bin/chrX_data/geuvadis_phenodata.csv")
 ```
 
-Now we can create our Ballgown object in R using the data compiled in the terminal (assigned to the dataDir parameter) and our phenotype data imported in the previous step (assigned to the pData parameter). From this object, we will also create bg_chrX_filt, which removes low abundance genes. As the name implies, low abundance genes are genes that match to the genome with lower frequency - therefore the bg_chrX_filt variable is identical to bg_chrX, with the exception of having the rarely-occuring genes weeded out. The "rowVars(texpr(bg_chrX)) > 1" translates to only including genes that appear in our data more than once. We will use the bg_chrX_filt object to perform the majority of our analysis.
+Now we can create our Ballgown object in R using the data compiled in the terminal (assigned to the dataDir parameter) and our phenotype data imported in the previous step (assigned to the pData parameter). From this object, we will also create bg_chrX_filt, which removes low abundance genes. As the name implies, low abundance genes are genes that match to our genome with lower frequency - therefore the bg_chrX_filt variable is identical to bg_chrX, with the exception of having the rarely-occuring genes weeded out. The "rowVars(texpr(bg_chrX)) > 1" translates to only including genes that appear in our data more than once. We will use the bg_chrX_filt object to perform the majority of our analysis.
 
 ``` sh
 > bg_chrX = ballgown(dataDir = "~/bin/ballgown", samplePattern = "ERR", pData = pheno_data)
