@@ -79,7 +79,7 @@ Let's start with a plot of gene abundances across samples, measured as FPKM valu
 > boxplot(fpkm, col = as.numeric(pheno_data$sex), las = 2, ylab = 'log2(FPKM + 1)')
 ```
 
-From this, we get the following visualization with males being represented by blue and females represented by pink:
+From this, we get the following visualization of our twelve samples with males being represented by blue and females represented by pink:
 
 <p align="center">
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/FPKM-samples-dist.png">
@@ -134,7 +134,7 @@ Going back to our transcripts_results readout above, we know the gene ID of ATP6
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/ATP6AP2-means.png">
 </p>
 
-From this visualization, we now know that in our data the gene ATP6AP2 has five distinct isoforms. We can see the differential expression of ATP6AP2 in males and females with this side-by-side comparison - in this case, the fourth isoform seems to be the most highly expressed.
+From this visualization, we now know that in our data the gene ATP6AP2 has five distinct isoforms. Isoforms are proteins that are functionally similar, but are not identical on their encoding. We can see the differential expression of ATP6AP2 in males and females with this side-by-side comparison, where "hotter" colors indicate higher expression. In this case, for instance, the fourth isoform seems to be the most highly expressed.
 
 We can perform similar analyses for the genes PNPLA4 and FMR1.
 
@@ -166,7 +166,7 @@ Continuing on and following a similar approach, for FMR1 we get:
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/FMR1-means.png">
 </p>
 
-FMR1 appears to be more statistically significant on transcript level. In fact, if we query our table of gene_results, it does not appear in even the top 30. To some degree, we can verify this through our plots - in the side-by-side comparison between males and females on the gene level, there is no clear perceptual distinction or "winner" between the two. But on the transcript level, we have two fairly compact boxplots where the median of the female approaches the maximum of the male. However, of the three genes we've examined the evidence for FMR1 is certainly the least compelling, and I don't think our data reasonably delineates FMR1 as a candidate for differential expression the same way that it does for PNPLA4 and ATP6AP2.
+FMR1 appears to be more statistically significant on transcript level. In fact, if we query our table of gene_results, it does not appear in even the top 30. To some degree, we can verify this through our plots - in the side-by-side comparison between males and females on the gene level, there is no clear perceptual distinction or "winner" between the two. But on the transcript level, we have two fairly compact boxplots where the median of the females approaches the maximum of the males. However, of the three genes we've examined the evidence for FMR1 is certainly the least compelling, and I don't think our data reasonably delineates FMR1 as a candidate for differential expression the same way that it does for PNPLA4 and ATP6AP2.
 
 Lastly, let's look at a gene that is known to be expressed differentially and *did* show up on our list with a q-value < 0.05 cutoff: XIST. According to our reference article for this project, XIST is known to be more highly expressed in females than males. We can verify this quickly by producing a boxplot similar to those done above.
 
@@ -206,11 +206,13 @@ main = c('Gene XIST in Sample ERR188428'), sample = c('ERR188428'))
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/XIST_ERR188428_Vis.png">
 </p>
 
-From these plots, we see that in our samples XIST has thirteen distinct isoforms. Of these, it appears that the eleventh isoform is the most highly expressed.
+From these plots, we see that in our samples XIST has thirteen distinct isoforms. Of these, it appears that the eleventh isoform is the most highly expressed - which we can verify if we iterate through all of the female samples we have. I have included these plots in the [images](https://github.com/akweiss/RNA-seq-intro/tree/master/images) folder, for anyone interested in studying them in more detail. 
 
 # Final Thoughts
 
-wrap it up homie
+From this project and our data, we can clearly conclude that both the NR_001564 transcript of the XIST gene and the XIST gene itself are differentially expressed between males and females. Additionally, PNPLA4 was found to be differentially expressed on the gene level, while ATP6AP2 just barely missed the cutoff in both categories. I think both of these genes have strong evidence of differential expression given our data, despite not making the cutoff of q < 0.05. It's worth noting that this cutoff is entirely arbitrary; if we had set it to q < 0.08, for instance, ATP6AP2 would be considered differentially expressed on both levels.
+
+Overall, I'm happy with my analysis because my results were slightly different from the results provided in the tutorial. It was fun to explore my own data and make my own conclusions, knowing that if I ran the same command line protocol again I would get a different outcome and subsequently different data to analyze. Most of all, I feel like this analysis forced me to learn and understand the subject on a deeper level, which is largely why I found it so enjoyable.
 
 # Resources
 [EBI: FPKM](https://www.ebi.ac.uk/training/online/glossary/fpkm)
