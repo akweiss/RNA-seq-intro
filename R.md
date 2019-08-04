@@ -1,4 +1,4 @@
-## Analysis in R
+## Setting Up for Analysis in R Using Ballgown
 
 Now that we have our Ballgown data from our command line programs, we can shift gears and move into R to do our analysis and generate some visualizations. Generally speaking, in differential gene expression analysis we are interested in performing statistical analyses in order to detect quantitative differences in expression levels between two experimental groups. In our case, we are interested in investigating the difference between the human X chromosome gene expression in males and females.
 
@@ -62,7 +62,7 @@ These commands give us the following output:
 
 From this, we now know that our X chromosome has eleven different transcripts that are differentially expressed between sexes, one of which corresponding to an isoform of a known gene (XIST). Additionally, we see that our X chromosome also has eight differentially expressed genes.
 
-## Data Visualizations
+## Data Exploration and Visualizations
 
 First off, we can change our colors to help aid our visualizations:
 
@@ -85,7 +85,7 @@ From this, we get the following visualization with males being represented by bl
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/FPKM-samples-dist.png">
 </p>
 
-Here we can see that our medians (the bold bars within each box for each individual sample) are all nearly zero. Hmm. Intuitively, this seems to indicate to me that we have a LOT of low abundance genes kicking around in there. Let's try the same thing again, calculating FPKM with bg_chrX_filt this time.
+Here we can see that our medians (the bold bars within each box for each individual sample) are all nearly zero. Hmm. Let's try the same thing again, calculating FPKM with bg_chrX_filt this time.
 
 ``` sh
 > fpkm = texpr(bg_chrX, meas = "fpkm")
@@ -97,7 +97,7 @@ Here we can see that our medians (the bold bars within each box for each individ
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/FPKM_filt_samples.png">
 </p>
 
-Now we see our medians all vary between 0 and ~3. Interesting! Implicitly, this tells us something about our transcription assembly process: the sensitivity was very good?
+Now we see our medians all vary between 0 and ~3. Interesting! After some thought, this does make sense; reads that only appear once in our data can only be mapped once - if they map at all - and log2(1) = 0. Thus, this seems to imply that our bg_chrX data has a lot of genes with very low or zero abundance in our samples, while the bg_chrX_filt data removes these to give a better feel for the proportion of genes with higher abundance.
 
 Next, let's investigate which genes missed our cutoff of q < 0.05. We can do this by looking at the first 20 rows of our results_transcript dataframe.
 
@@ -111,7 +111,7 @@ Next, let's investigate which genes missed our cutoff of q < 0.05. We can do thi
 
 From this, we can see that the gene ATP6AP2 narrowly missed our cutoff. Let's investigate this gene. From the readout, we know its ID is 1042 - after a little investigation, we can find that in our bg_chrX_filt object, ATP6AP2 is indexed at position 797. Using this, we can generate some visualizations.
 
-First off, boxplot to sdlkfjsdklfj illustrate our differential expression.
+First off, let's use a boxplot to show FPKM distribution of the individual ATP6AP2 transcript NM_005765 across all samples.
 
 ``` sh
 > plot(fpkm[797,] ~ pheno_data$sex, border = c(1,2), main = paste(ballgown::geneNames(bg_chrX_filt)[797],' : ', 
@@ -122,9 +122,9 @@ ballgown::transcriptNames(bg_chrX_filt)[797]), pch = 19, xlab = "Sex", ylab = "l
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/ATP6AP2-diff.png">
 </p>
 
-Expand
+While this might seem like a reasonable difference between males and females, note the scale of the y-axis: in actuality, it appears that the difference between means of NM_005765 is approximately 0.5. In this way, the boxplot can seem a bit deceiving - we should consider manually rescaling the y-axis to better illustrate this FPKM distribution.
 
-Noting that from our above transcripts readout, we know the geneID of ATP6AP2 is MSTRG.240. Thus, we can expand further by plotting the average expression levels for all transcripts of ATP6AP2 between males and females with the following:
+Going back to our transcripts_results readout above, we know the gene ID of ATP6AP2 is MSTRG.240. Thus, we can expand further by plotting the average expression levels for all transcripts of ATP6AP2 between males and females with the following:
 
 ``` sh
 > plotMeans(MSTRG.240', bg_chrX_filt, groupvar = "sex", legend = FALSE)
@@ -134,7 +134,7 @@ Noting that from our above transcripts readout, we know the geneID of ATP6AP2 is
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/ATP6AP2-means.png">
 </p>
 
-Analysis here
+From this visualization, we can see that the gene ATP6AP2 has five distinct isoforms. We can see the differential expression of ATP6AP2 in males and females with this side-by-side comparison - in this case, the fourth isoform seems to be the most highly expressed.
 
 We can perform similar analyses for the genes PNPLA4 and FMR1.
 
@@ -148,13 +148,15 @@ Using identical commands as above (but with updated position within the bg_chrX_
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/PNPLA4-means.png">
 </p>
 
-Talk about transcript level vs gene level; .63 is PNP's gene ID, which DOES appear on the readout for results_genes.
+The case of PNPLA4 provides a good example of the difference between transcript level and gene level differential expression. Note that PNPLA4's gene ID, MSTRP.63, *is* listed in our statistically significant gene_results table, but is *not* in the transcript_results table (though it does appear in the top 20). What does this mean? Essentially
+
+It's also worth noting that the gene ID for ATP6AP2, MSTRP.240, just *barely* missed the cutoff of q < 0.05 on the gene level. In my opinion, this - paired with also narrowly missing the cutoff on the transcript level - enables an argument to be made for our data showing ATP6AP2 to be differentially expressed.
 
 <p align="center">
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/gene_results_10.png">
 </p>
 
-Similarly, for FMR1 we have:
+Continuing on and following a similar approach, for FMR1 we get:
 
 <p align="center">
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/FMR1-diff.png">
@@ -164,7 +166,7 @@ Similarly, for FMR1 we have:
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/FMR1-means.png">
 </p>
 
-FMR1 matches more on transcript level. Does not even appear on the top 30 for gene comparison, which we can somewhat verify from the means plot.
+FMR1 matches more on transcript level. If we query our table of gene_results, it does not appear in even the top 30. To some degree, we can verify this through our plots - slkdfj.
 
 Lastly, let's look at a gene that is known to be expressed differentially and *did* show up on our list with a q-value < 0.05 cutoff: XIST. According to our reference article for this project, XIST is known to be more highly expressed in females than males. We can verify this quickly by producing a boxplot similar to those done above.
 
@@ -180,7 +182,7 @@ If we recall our readout for transcript_results, we can see that XIST has the ID
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/RNA-seq-qval-2.png">
 </p>
 
-Thus, let's look at XIST in one of our female samples. From our .csv, we know ERR188234 is female - therefore:
+Thus, let's look at XIST in one of our female samples. From our first visualization (and our provided .csv), we know ERR188234 is female - therefore:
 
 ``` sh
 > plotTranscripts(ballgown::geneIDs(bg_chrX)[2394], bg_chrX, 
@@ -204,7 +206,7 @@ main = c('Gene XIST in Sample ERR188428'), sample = c('ERR188428'))
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/XIST_ERR188428_Vis.png">
 </p>
 
-Analysis
+From these plots, we see that in our samples XIST has 13 distinct isoforms.
 
 # Final Thoughts
 
