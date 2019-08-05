@@ -99,7 +99,7 @@ Here we can see that our medians (the bold bars within each box for each individ
 
 Now we see our medians all vary between 0 and ~3. Interesting! After some thought, this does make sense; reads that only appear once in our data can only be mapped once - if they map at all - and log2(1) = 0. Thus, this seems to imply that our ```bg_chrX``` data has a lot of genes with very low or zero abundance in our samples, while the ```bg_chrX_filt``` data removes these to give a better feel for the proportion of genes with higher abundance.
 
-Next, let's investigate which transcripts missed our cutoff of q < 0.05. We can do this by looking at the first 20 rows of our results_transcript dataframe.
+Next, let's investigate which transcripts missed our cutoff of q < 0.05. We can do this by looking at the first 20 rows of our ```results_transcripts``` dataframe.
 
 ```sh
 > head(results_transcripts, 20)
@@ -124,7 +124,7 @@ ballgown::transcriptNames(bg_chrX_filt)[797]), pch = 19, xlab = "Sex", ylab = "l
 
 While this might seem like a reasonable difference between males and females, note the scale of the y-axis: in actuality, it appears that the difference between medians of NM_005765 is approximately 0.5. In this way, the boxplot can appear a bit deceiving - we should consider manually rescaling the y-axis to better illustrate this FPKM distribution.
 
-Going back to our transcripts_results readout above, we know the gene ID of ATP6AP2 is MSTRG.240. Thus, we can expand further by plotting the average expression levels for all transcripts of ATP6AP2 between males and females with the following:
+Going back to our ```results_transcripts``` readout above, we know the gene ID of ATP6AP2 is MSTRG.240. Thus, we can expand further by plotting the average expression levels for all transcripts of ATP6AP2 between males and females with the following:
 
 ``` sh
 > plotMeans(MSTRG.240', bg_chrX_filt, groupvar = "sex", legend = FALSE)
@@ -148,7 +148,7 @@ Using identical commands as above (but with updated position within the ```bg_ch
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/PNPLA4-means.png">
 </p>
 
-The case of PNPLA4 provides a good example of the difference between transcript level and gene level differential expression. Note that PNPLA4's gene ID, MSTRP.63, *is* listed in our statistically significant ```gene_results``` table, but is *not* in the ```transcript_results``` table (though it does appear in the top 20). Essentially, this means that all isoforms of PNPLA4 in our data were statistically found - as a group - to be differentially expressed, but the individual transcript of NM_001142389 was not. From inspecting our boxplot of NM_001142389, this makes some sense; there is a tremendous amount of variation in females, to the extent that for this transcript nearly all of the data for the males is encompassed in the space just between the first quartile and the median for the females. This can make it difficult to conclude if there really is a significant difference. On the gene level, however, PNPLA4 appears to be more highly expressed in three out of the five distinct isoforms.
+The case of PNPLA4 provides a good example of the difference between transcript level and gene level differential expression. Note that PNPLA4's gene ID, MSTRP.63, *is* listed in our statistically significant ```results_genes``` table, but is *not* in the ```results_transcripts``` table (though it does appear in the top 20). Essentially, this means that all isoforms of PNPLA4 in our data were statistically found - as a group - to be differentially expressed, but the individual transcript of NM_001142389 was not. From inspecting our boxplot of NM_001142389, this makes some sense; there is a tremendous amount of variation in females, to the extent that for this transcript nearly all of the data for the males is encompassed in the space just between the first quartile and the median for the females. This can make it difficult to conclude if there really is a significant difference. On the gene level, however, PNPLA4 appears to be more highly expressed in three out of the five distinct isoforms.
 
 It's also worth noting that the gene ID for ATP6AP2, MSTRP.240, just *barely* missed the cutoff of q < 0.05 on the gene level. In my opinion, this - paired with also narrowly missing the cutoff on the transcript level - enables an argument to be made for our data showing ATP6AP2 to be differentially expressed.
 
@@ -166,7 +166,7 @@ Continuing on and following a similar approach, for FMR1 we get:
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/FMR1-means.png">
 </p>
 
-FMR1 appears to be more statistically significant on transcript level. In fact, if we query our table of ```gene_results```, it does not appear in even the top 30. To some degree, we can verify this through our plots; in the side-by-side comparison between males and females on the gene level, there is no clear perceptual distinction or "winner" between the two - if anything, the males seem to have slightly warmer colors across the board. But on the transcript level, we have two fairly compact boxplots where the median of the females approaches the maximum of the males. However, of the three genes we've examined the evidence for so far, FMR1 is certainly the least compelling; I don't think our data reasonably delineates FMR1 as a candidate for differential expression the same way that it does for PNPLA4 and ATP6AP2.
+FMR1 appears to be more statistically significant on transcript level. In fact, if we query our table of ```results_genes```, it does not appear in even the top 30. To some degree, we can verify this through our plots; in the side-by-side comparison between males and females on the gene level, there is no clear perceptual distinction or "winner" between the two - if anything, the males seem to have slightly warmer colors across the board. But on the transcript level, we have two fairly compact boxplots where the median of the females approaches the maximum of the males. However, of the three genes we've examined the evidence for so far, FMR1 is certainly the least compelling; I don't think our data reasonably delineates FMR1 as a candidate for differential expression the same way that it does for PNPLA4 and ATP6AP2.
 
 Lastly, let's look at a gene that is known to be expressed differentially and *did* show up on our list with a q-value < 0.05 cutoff: XIST. According to our reference article for this project, XIST is known to be more highly expressed in females than males. We can verify this quickly by producing a boxplot similar to those done above.
 
@@ -176,7 +176,7 @@ Lastly, let's look at a gene that is known to be expressed differentially and *d
 
 Yeah, that's... pretty convincing.
 
-If we recall our readout for ```transcript_results```, we can see that XIST has the ID of 2394:
+If we recall our readout for ```results_transcripts```, we can see that XIST has the ID of 2394:
 
 <p align="center">
   <img width="700" src="https://github.com/akweiss/RNA-seq-intro/blob/master/images/RNA-seq-qval-2.png">
